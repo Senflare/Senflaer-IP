@@ -8,6 +8,10 @@ urls = [
     'https://ip.164746.xyz', 
   # 'https://cf.090227.xyz',  # 这里使用#进行注释
     'https://stock.hostmonit.com/CloudFlareYes',
+    'https://api.uouin.com/cloudflare.html',
+    'https://ipdb.api.030101.xyz/?type=bestproxy&country=true',
+    'https://cf.hyli.xyz/',
+    'https://api.uouin.com/cloudflare.html',
     'https://www.wetest.vip/page/cloudflare/address_v4.html'
 ]
 
