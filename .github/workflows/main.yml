@@ -34,7 +34,6 @@ jobs:
         uses: actions/setup-python@v5  # 官方Python环境配置工具
         with:
           python-version: '3.9'  # 指定Python版本（与脚本兼容）
-          cache: 'pip'  # 缓存pip依赖（加速后续运行）
 
       # 步骤3：安装依赖库
       - name: 安装所需依赖
