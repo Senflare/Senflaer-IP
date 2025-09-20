@@ -85,4 +85,4 @@ Senflare-IP 是一个轻量级工具，用于自动化收集公开的Cloudflare 
 - 运行环境：Ubuntu最新版
 - 流程：拉取代码 → 配置Python环境 → 安装依赖 → 运行脚本 → 提交结果
 
-查看工作流配置：[ip-collection.yml](.github/workflows/main.yml)
+查看工作流配置：[main.yml](.github/workflows/main.yml)
