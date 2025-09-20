@@ -10,7 +10,16 @@ requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
 # 核心配置参数（集中管理，方便调整）
 CONFIG = {
-    "ip_sources": ['https://ip.164746.xyz'],  # IP来源URL
+    "ip_sources": [
+    'https://ip.164746.xyz', 
+  # 'https://cf.090227.xyz',  # 这里使用#进行注释
+    'https://stock.hostmonit.com/CloudFlareYes',
+    'https://api.uouin.com/cloudflare.html',
+    'https://ipdb.api.030101.xyz/?type=bestproxy&country=true',
+    'https://cf.hyli.xyz/',
+    'https://api.uouin.com/cloudflare.html',
+    'https://www.wetest.vip/page/cloudflare/address_v4.html'
+    ],  # IP来源URL
     "test_port": 443,                        # 检测端口（Cloudflare默认HTTPS端口）
     "timeout": 5,                            # 超时时间（秒）
     "retries": 2                             # 重试次数（含首次）
