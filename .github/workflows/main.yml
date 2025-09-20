@@ -3,46 +3,35 @@ name: Update IP List
 on:
   schedule:
     - cron: '0 */6 * * *'  # 每6小时运行一次
-  workflow_dispatch:      # 允许手动触发
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
   update-ip:
     runs-on: ubuntu-latest
     steps:
-      - name: 拉取代码
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       
-      - name: 设置Python环境
+      - name: Set up Python 3.9
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
-          # 不使用缓存，避免查找requirements.txt
           
-      - name: 安装依赖库
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests urllib3
           
-      - name: 删除旧工作流记录
-        uses: Mattraks/delete-workflow-runs@v2
-        with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 2
-          keep_minimum_runs: 6
-          
-      - name: 运行IP收集脚本
+      - name: Run IP collection script
         run: python collect_ips.py
         
-      - name: 提交更新
+      - name: Commit and push changes
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           git add ip.txt senflare.txt
           if git diff --cached --quiet; then
-            echo "无更新内容，跳过提交"
+            echo "No changes to commit"
           else
-            git commit -m "自动更新IP列表: $(date +'%Y-%m-%d %H:%M')"
-            git push
+            git commit -m "Update IP list: $(date +'%Y-%m-%d %H:%M') | Available: $(wc -l < senflare.txt)"
+            git push origin main
           fi
-    
