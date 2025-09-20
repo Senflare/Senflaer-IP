@@ -1,4 +1,4 @@
-name: Update IP List
+name: Basic IP Check Workflow
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # 允许手动触发
 
 jobs:
-  update-ip:
+  check-ips:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,10 +21,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests urllib3
           
-      - name: Run IP collection script
+      - name: Run IP check script
         run: python collect_ips.py
         
-      - name: Commit and push changes
+      - name: Commit changes
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
@@ -32,6 +32,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update IP list: $(date +'%Y-%m-%d %H:%M') | Available: $(wc -l < senflare.txt)"
+            git commit -m "Update available IPs: $(date +'%Y-%m-%d %H:%M')"
             git push origin main
           fi
