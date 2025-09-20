@@ -2,47 +2,47 @@ name: Update IP List
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # 每6小时运行一次
+    - cron: '0 */6 * * *' # 每6小时运行一次（原注释“每3小时”是笔误，cron格式为“分 时 日 月 周”）
   workflow_dispatch: # 允许手动触发
 
 jobs:
   update-ip-list:
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # 补充urllib3，避免requests.verify=False的警告
+          pip install requests beautifulsoup4 urllib3
+          
+      - name: Delete old workflow runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 2
+          keep_minimum_runs: 6
+          
+      - name: Run IP collection script
+        run: python ${{ github.workspace }}/collect_ips.py
         
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install requests
-        pip install beautifulsoup4
-        
-    - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
-      with:
-        token: ${{ github.token }}
-        repository: ${{ github.repository }}
-        retain_days: 2
-        keep_minimum_runs: 6
-        
-    - name: Run script
-      run: python ${{ github.workspace }}/collect_ips.py
-        
-    - name: Commit and push changes
-      run: |
-        git config --local user.email "actions@github.com"
-        git config --local user.name "GitHub Action"
-        if [ -n "$(git status --porcelain)" ]; then
-          git add ip.txt senflare.txt  # 同时添加两个文件
-          git commit -m "Automatic update IP list at $(date +'%Y-%m-%d %H:%M:%S')"
-          git push
-        else
-          echo "No changes detected, skipping commit."
-        fi
-    
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Action"
+          # 同时跟踪ip.txt和senflare.txt，避免未跟踪文件报错
+          git add ip.txt senflare.txt
+          # 仅当文件有变化时才提交（避免空提交）
+          if git diff --cached --quiet; then
+            echo "No changes to commit, skipping."
+          else
+            git commit -m "Automatic update: IP list (available: $(wc -l < senflare.txt))"
+            git push
+          fi
