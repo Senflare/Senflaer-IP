@@ -2,9 +2,6 @@
 
 自动收集、验证Cloudflare IPv4地址并按地区格式化的工具
 
-![GitHub Actions Status](https://img.shields.io/github/actions/workflow/status/your-username/Senflare-IP/ip-collection.yml?label=自动更新)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-
 ## 项目介绍
 
 Senflare-IP 是一个轻量级工具，用于自动化收集公开的Cloudflare IPv4地址，通过多维度验证筛选可用节点，并按国家/地区分组格式化输出。适用于需要快速获取可用Cloudflare节点的场景（如网络加速、节点优选等）。
@@ -88,4 +85,4 @@ Senflare-IP 是一个轻量级工具，用于自动化收集公开的Cloudflare 
 - 运行环境：Ubuntu最新版
 - 流程：拉取代码 → 配置Python环境 → 安装依赖 → 运行脚本 → 提交结果
 
-查看工作流配置：[ip-collection.yml](.github/workflows/ip-collection.yml)
+查看工作流配置：[ip-collection.yml](.github/workflows/main.yml)
