@@ -1,37 +1,48 @@
-name: Basic IP Check Workflow
+name: IP Collection and Validation  # 工作流名称
 
+# 触发条件：定时运行 + 手动触发
 on:
   schedule:
-    - cron: '0 */6 * * *'  # 每6小时运行一次
-  workflow_dispatch:  # 允许手动触发
+    - cron: '0 */6 * * *'  # 每6小时运行一次（分时日月周）
+  workflow_dispatch:  # 允许在GitHub页面手动触发工作流
 
 jobs:
-  check-ips:
-    runs-on: ubuntu-latest
+  process-ips:  # 唯一的任务：处理IP收集和检测
+    runs-on: ubuntu-latest  # 使用最新版Ubuntu系统作为运行环境
+    
     steps:
-      - uses: actions/checkout@v4
-      
+      # 步骤1：拉取当前仓库代码到运行环境
+      - name: Checkout repository code
+        uses: actions/checkout@v4  # GitHub官方的代码拉取工具，v4是最新稳定版
+
+      # 步骤2：配置Python环境
       - name: Set up Python 3.9
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5  # 官方Python环境配置工具
         with:
-          python-version: '3.9'
-          
-      - name: Install dependencies
+          python-version: '3.9'  # 指定使用Python 3.9（与脚本兼容的版本）
+
+      # 步骤3：安装脚本依赖的Python库
+      - name: Install required dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install requests urllib3
-          
-      - name: Run IP check script
-        run: python collect_ips.py
-        
-      - name: Commit changes
+          python -m pip install --upgrade pip  # 升级pip到最新版，避免安装问题
+          pip install requests urllib3  # 安装脚本需要的库（网络请求和SSL处理）
+
+      # 步骤4：运行IP收集和检测脚本
+      - name: Run IP collection and validation script
+        run: python collect_ips.py  # 执行核心脚本，生成ip.txt和senflare.txt
+
+      # 步骤5：提交检测结果到仓库
+      - name: Commit and push results
         run: |
+          # 配置Git提交者信息（使用GitHub Actions默认身份）
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
+          
+          # 将生成的IP文件添加到Git跟踪
           git add ip.txt senflare.txt
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update available IPs: $(date +'%Y-%m-%d %H:%M')"
-            git push origin main
-          fi
+          
+          # 提交更改（若没有变化则不报错）
+          git commit -m "Update IP list: $(date +'%Y-%m-%d %H:%M')" || true
+          
+          # 推送到远程仓库（若没有新内容则不报错）
+          git push origin main || true
