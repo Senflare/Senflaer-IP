@@ -1,20 +1,13 @@
 import requests
-from bs4 import BeautifulSoup
 import re
 import os
 import subprocess
 import platform
+import time
 
 # 目标URL列表
 urls = [
-    'https://ip.164746.xyz', 
-    # 'https://cf.090227.xyz',  # 这里使用#进行注释
-    'https://stock.hostmonit.com/CloudFlareYes',
-    'https://api.uouin.com/cloudflare.html',
-    'https://ipdb.api.030101.xyz/?type=bestproxy&country=true',
-    'https://cf.hyli.xyz/',
-    'https://api.uouin.com/cloudflare.html',
-    'https://www.wetest.vip/page/cloudflare/address_v4.html'
+    'https://ip.164746.xyz'
 ]
 
 # 正则表达式用于匹配IP地址
@@ -49,6 +42,19 @@ for url in urls:
         print(f'请求 {url} 失败: {e}')
         continue
 
+# 获取IP的地区信息（国家代码）
+def get_ip_region(ip):
+    try:
+        # 使用ip-api.com获取IP信息，返回国家代码
+        response = requests.get(f'http://ip-api.com/json/{ip}?fields=countryCode', timeout=5)
+        data = response.json()
+        if data['status'] == 'success':
+            return data['countryCode']
+        return 'Unknown'
+    except Exception as e:
+        print(f"查询IP {ip} 地区信息失败: {e}")
+        return 'Unknown'
+
 # 将去重后的IP地址按数字顺序排序后写入文件
 if unique_ips:
     # 按IP地址的数字顺序排序（非字符串顺序）
@@ -59,10 +65,15 @@ if unique_ips:
             file.write(ip + '\n')
     print(f'已保存 {len(sorted_ips)} 个唯一IP地址到ip.txt文件。')
     
-    # 对IP进行ping测试
-    print("正在进行ping测试，筛选可用IP...")
+    # 对IP进行ping测试并获取延迟
+    print("正在进行ping测试并收集地区信息，筛选可用IP...")
     reachable_ips = []
     for ip in sorted_ips:
+        # 获取地区信息
+        region = get_ip_region(ip)
+        # 为避免API请求过于频繁，添加短暂延迟
+        time.sleep(0.5)
+        
         # 根据操作系统设置不同的ping参数
         param = '-n 1' if platform.system().lower() == 'windows' else '-c 1'
         timeout = '-w 2000' if platform.system().lower() == 'windows' else '-W 2'
@@ -76,19 +87,30 @@ if unique_ips:
                 universal_newlines=True
             )
             
-            # 检查ping结果
-            if 'TTL=' in output or 'ttl=' in output:
-                reachable_ips.append(ip)
-                print(f"IP {ip} 可访问")
+            # 提取延迟时间（处理Windows和Linux不同的输出格式）
+            delay = None
+            if platform.system().lower() == 'windows':
+                # Windows格式: 时间=32ms
+                delay_match = re.search(r'时间=(\d+)ms', output)
             else:
-                print(f"IP {ip} 不可访问")
+                # Linux格式: time=32 ms
+                delay_match = re.search(r'time=(\d+)', output)
+                
+            if delay_match:
+                delay = f"{delay_match.group(1)}ms"
+                reachable_ips.append(f"{ip}#{region}-{delay}")
+                print(f"IP {ip} 可访问，地区: {region}，延迟: {delay}")
+            else:
+                print(f"IP {ip} 可访问，但无法获取延迟信息")
+                
         except subprocess.CalledProcessError:
             print(f"IP {ip} 不可访问")
     
-    # 保存可访问的IP到senflare.txt
+    # 保存可访问的IP到senflare.txt，格式: IP#地区-延迟
     with open('senflare.txt', 'w') as file:
-        for ip in reachable_ips:
-            file.write(ip + '\n')
+        for entry in reachable_ips:
+            file.write(entry + '\n')
     print(f'已保存 {len(reachable_ips)} 个可访问的IP地址到senflare.txt文件。')
 else:
     print('未找到有效的IP地址。')
+    
