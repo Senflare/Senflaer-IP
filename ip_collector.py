@@ -28,8 +28,15 @@ CONFIG = {
     "ip_sources": [
         'https://ip.164746.xyz',
         'https://cf.hyli.xyz/'
+         # 'https://cf.090227.xyz',
+        'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt'
+        'https://api.uouin.com/cloudflare.html',
+        'https://ipdb.api.030101.xyz/?type=bestproxy&country=true',
+        'https://ipdb.api.030101.xyz/?type=bestcf&country=true',
+        'https://stock.hostmonit.com/CloudFlareYes',
+        'https://www.wetest.vip/page/cloudflare/address_v4.html'
     ],
-    "test_ports": [443,2053,8443],  # 多端口检测提高兼容性
+    "test_ports": [443, 2053, 2083, 2087, 2096, 8443],  # 多端口检测提高兼容性
     "timeout": 10,                  # 延长超时时间至10秒
     "retries": 3,                   # 保留3次重试
     "tcp_ping_ports": [443],    # 核心端口TCP Ping
@@ -192,7 +199,7 @@ def main():
                     if all(0 <= int(part) <= 255 for part in ip.split('.'))
                 ]
                 all_ips.extend(valid_ips)
-                print(f"✅ 成功收集 {len(valid_ips)} 个")
+                print(f"✅ 成功收集 {len(valid_ips)} 个有效IP地址")
             else:
                 print(f"❌ 失败（状态码 {resp.status_code}）")
         except Exception as e:
