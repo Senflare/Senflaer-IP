@@ -27,11 +27,7 @@ COUNTRY_MAPPING = {
 CONFIG = {
     "ip_sources": [
         'https://ip.164746.xyz',  
-        'https://cf.hyli.xyz/',
-        'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt',
-        'https://api.uouin.com/cloudflare.html',
-        'https://ipdb.api.030101.xyz/?type=bestproxy&country=true',
-        'https://stock.hostmonit.com/CloudFlareYes'
+        'https://cf.hyli.xyz/'
     ],
     "test_port": 443,                # 仅检测443端口
     "timeout": 8,                    # 超时时间
