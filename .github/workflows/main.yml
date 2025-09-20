@@ -1,29 +1,29 @@
-name: Update IP List (With Region & Delay)
+name: Update IP List
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # 每6小时运行一次（cron格式：分 时 日 月 周）
-  workflow_dispatch:  # 手动触发
+    - cron: '0 */6 * * *'  # 每6小时运行一次
+  workflow_dispatch:      # 允许手动触发
 
 jobs:
   update-ip:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # 升级到最新版，提升稳定性
+      - name: 拉取代码
+        uses: actions/checkout@v4
       
-      - name: Set up Python 3.9
+      - name: 设置Python环境
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
-          cache: 'pip'  # 缓存依赖，加速运行
+          # 不使用缓存，避免查找requirements.txt
           
-      - name: Install Dependencies
+      - name: 安装依赖库
         run: |
           python -m pip install --upgrade pip
-          # 安装所有依赖（包含urllib3，避免SSL警告）
           pip install requests urllib3
           
-      - name: Delete Old Workflow Runs
+      - name: 删除旧工作流记录
         uses: Mattraks/delete-workflow-runs@v2
         with:
           token: ${{ github.token }}
@@ -31,19 +31,18 @@ jobs:
           retain_days: 2
           keep_minimum_runs: 6
           
-      - name: Run IP Collection Script
-        run: python ${{ github.workspace }}/collect_ips.py
+      - name: 运行IP收集脚本
+        run: python collect_ips.py
         
-      - name: Commit & Push Changes
+      - name: 提交更新
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
-          # 同时跟踪两个文件，避免未跟踪报错
-          git add ${{ github.workspace }}/ip.txt ${{ github.workspace }}/senflare.txt
-          # 仅当文件有变化时提交（避免空提交）
+          git add ip.txt senflare.txt
           if git diff --cached --quiet; then
-            echo "No changes to commit (IP list unchanged)"
+            echo "无更新内容，跳过提交"
           else
-            git commit -m "Update IP List: $(date +'%Y-%m-%d %H:%M') | Available: $(wc -l < senflare.txt)"
-            git push origin main --force-with-lease  # 安全推送，避免冲突
+            git commit -m "自动更新IP列表: $(date +'%Y-%m-%d %H:%M')"
+            git push
           fi
+    
