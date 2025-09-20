@@ -8,7 +8,10 @@ from urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
 # 配置参数
-IP_SOURCE_URLS = ['https://ip.164746.xyz']
+IP_SOURCE_URLS = [
+     'https://cf.hyli.xyz/',
+     'https://ip.164746.xyz'
+]
 TEST_PORT = 443
 TEST_TIMEOUT = 3  # 超时时间(秒)
 TEST_RETRIES = 1  # 重试次数
