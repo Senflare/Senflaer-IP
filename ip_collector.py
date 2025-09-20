@@ -33,7 +33,8 @@ CONFIG = {
         'https://api.uouin.com/cloudflare.html',
         'https://ipdb.api.030101.xyz/?type=bestproxy&country=true',
         'https://ipdb.api.030101.xyz/?type=bestcf&country=true',
-        'https://stock.hostmonit.com/CloudFlareYes',
+        'https://addressesapi.090227.xyz/CloudFlareYes',
+         # 'https://stock.hostmonit.com/CloudFlareYes',
         'https://www.wetest.vip/page/cloudflare/address_v4.html'
     ],
     "test_ports": [443, 2053, 2083, 2087, 2096, 8443],  # 多端口检测提高兼容性
