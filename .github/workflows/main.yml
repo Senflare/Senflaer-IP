@@ -2,11 +2,10 @@ name: Update IP List
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # 每3小时运行一次
+    - cron: '0 */6 * * *' # 每6小时运行一次
   workflow_dispatch: # 允许手动触发
 
 jobs:
-
   update-ip-list:
     runs-on: ubuntu-latest
     
@@ -40,9 +39,10 @@ jobs:
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Action"
         if [ -n "$(git status --porcelain)" ]; then
-          git add ip.txt
-          git commit -m "Automatic update"
+          git add ip.txt senflare.txt  # 同时添加两个文件
+          git commit -m "Automatic update IP list at $(date +'%Y-%m-%d %H:%M:%S')"
           git push
         else
           echo "No changes detected, skipping commit."
         fi
+    
