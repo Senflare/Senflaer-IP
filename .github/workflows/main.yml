@@ -3,7 +3,9 @@ name: IP Collection and Validation  # 工作流名称
 # 触发条件：定时运行 + 手动触发
 on:
   schedule:
-    - cron: '0 */6 * * *'  # 每6小时运行一次（分时日月周）
+    - cron: '0 */3 * * *'  # 每3小时运行一次（分时日月周）
+                          # 格式说明：分 时 日 月 周
+                          # */3表示每3小时，0表示整点执行
   workflow_dispatch:  # 允许在GitHub页面手动触发工作流
 
 jobs:
@@ -28,8 +30,9 @@ jobs:
           pip install requests urllib3  # 安装脚本需要的库（网络请求和SSL处理）
 
       # 步骤4：运行IP收集和检测脚本
+      # 注意：请确保脚本文件名与实际文件名一致
       - name: Run IP collection and validation script
-        run: python collect_ips.py  # 执行核心脚本，生成ip.txt和senflare.txt
+        run: python ip_collector.py  # 执行核心脚本，生成IPlist.txt和Senflare.txt
 
       # 步骤5：提交检测结果到仓库
       - name: Commit and push results
@@ -39,7 +42,7 @@ jobs:
           git config --local user.name "GitHub Action"
           
           # 将生成的IP文件添加到Git跟踪
-          git add ip.txt senflare.txt
+          git add IPlist.txt Senflare.txt
           
           # 提交更改（若没有变化则不报错）
           git commit -m "Update IP list: $(date +'%Y-%m-%d %H:%M')" || true
