@@ -1,51 +1,95 @@
-name: IP Collection and Validation  # 工作流名称
+name: IP Collection and Validation  # 工作流名称：IP收集与验证
 
-# 触发条件：定时运行 + 手动触发
+# 触发条件配置
 on:
   schedule:
-    - cron: '0 */3 * * *'  # 每3小时运行一次（分时日月周）
-                          # 格式说明：分 时 日 月 周
-                          # */3表示每3小时，0表示整点执行
-  workflow_dispatch:  # 允许在GitHub页面手动触发工作流
+    # 定时运行：每3小时执行一次（UTC时间）
+    # cron格式：分 时 日 月 周
+    # */3表示每3小时，0表示整点，例如0:00、3:00、6:00...
+    - cron: '0 */3 * * *'
+  workflow_dispatch:  # 允许手动触发（在GitHub页面点击"Run workflow"）
+    inputs:
+      # 手动触发时可添加备注（可选）
+      run_note:
+        description: '运行备注（可选）'
+        required: false
+        default: '手动触发IP更新'
 
+# 工作流任务定义
 jobs:
-  process-ips:  # 唯一的任务：处理IP收集和检测
-    runs-on: ubuntu-latest  # 使用最新版Ubuntu系统作为运行环境
+  process-ips:
+    name: 处理IP收集与验证  # 任务名称
+    runs-on: ubuntu-latest  # 运行环境：最新版Ubuntu（GitHub托管的Runner）
+    timeout-minutes: 15  # 任务超时控制：15分钟未完成则终止（防止无限运行）
     
     steps:
-      # 步骤1：拉取当前仓库代码到运行环境
-      - name: Checkout repository code
-        uses: actions/checkout@v4  # GitHub官方的代码拉取工具，v4是最新稳定版
+      # 步骤1：拉取仓库代码到运行环境
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4  # 使用官方最新版checkout工具
+        with:
+          fetch-depth: 1  # 只拉取最新一次提交（减少网络传输）
 
       # 步骤2：配置Python环境
-      - name: Set up Python 3.9
+      - name: 配置Python 3.9
         uses: actions/setup-python@v5  # 官方Python环境配置工具
         with:
-          python-version: '3.9'  # 指定使用Python 3.9（与脚本兼容的版本）
+          python-version: '3.9'  # 指定Python版本（与脚本兼容）
+          cache: 'pip'  # 缓存pip依赖（加速后续运行）
 
-      # 步骤3：安装脚本依赖的Python库
-      - name: Install required dependencies
+      # 步骤3：安装依赖库
+      - name: 安装所需依赖
         run: |
-          python -m pip install --upgrade pip  # 升级pip到最新版，避免安装问题
-          pip install requests urllib3  # 安装脚本需要的库（网络请求和SSL处理）
+          # 升级pip到最新版（避免旧版本安装问题）
+          python -m pip install --upgrade pip
+          # 安装脚本依赖（requests用于网络请求，urllib3处理SSL）
+          pip install requests urllib3
+          # 安装完成后显示版本（便于调试依赖问题）
+          pip list | grep -E "requests|urllib3"
 
-      # 步骤4：运行IP收集和检测脚本
-      # 注意：请确保脚本文件名与实际文件名一致
-      - name: Run IP collection and validation script
-        run: python ip_collector.py  # 执行核心脚本，生成IPlist.txt和Senflare.txt
+      # 步骤4：运行IP处理脚本
+      - name: 执行IP收集与验证脚本
+        run: python ip_collector.py  # 运行核心脚本
+        env:
+          # 设置超时环境变量（与脚本内超时配置呼应）
+          TIMEOUT_SECONDS: 10
+        continue-on-error: false  # 脚本运行失败则终止工作流
 
-      # 步骤5：提交检测结果到仓库
-      - name: Commit and push results
+      # 步骤5：验证结果文件是否生成
+      - name: 检查结果文件
+        run: |
+          # 验证关键文件是否存在，不存在则报错
+          if [ ! -f "IPlist.txt" ] || [ ! -f "Senflare.txt" ]; then
+            echo "错误：结果文件未生成"
+            exit 1
+          fi
+          # 显示文件大小（确认有内容）
+          echo "IPlist.txt 大小: $(wc -l IPlist.txt)行"
+          echo "Senflare.txt 大小: $(wc -l Senflare.txt)行"
+
+      # 步骤6：提交结果到仓库
+      - name: 提交并推送更新结果
         run: |
           # 配置Git提交者信息（使用GitHub Actions默认身份）
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           
-          # 将生成的IP文件添加到Git跟踪
+          # 检查文件是否有变化（避免空提交）
+          if git diff --quiet IPlist.txt Senflare.txt; then
+            echo "结果文件无变化，无需提交"
+            exit 0
+          fi
+          
+          # 添加文件到暂存区
           git add IPlist.txt Senflare.txt
           
-          # 提交更改（若没有变化则不报错）
-          git commit -m "Update IP list: $(date +'%Y-%m-%d %H:%M')" || true
+          # 生成带时间戳的提交信息（包含手动触发备注）
+          COMMIT_MSG="Update IP list: $(date +'%Y-%m-%d %H:%M')"
+          if [ -n "${{ github.event.inputs.run_note }}" ]; then
+            COMMIT_MSG="$COMMIT_MSG (${{ github.event.inputs.run_note }})"
+          fi
           
-          # 推送到远程仓库（若没有新内容则不报错）
-          git push origin main || true
+          # 提交并推送
+          git commit -m "$COMMIT_MSG"
+          git push origin main
+        # 即使提交失败也不中断工作流（例如远程有冲突时）
+        continue-on-error: true
