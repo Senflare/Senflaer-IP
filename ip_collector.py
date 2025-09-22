@@ -249,7 +249,7 @@ def main():
         # 同一地区内按延迟排序（更快的在前）
         sorted_ips = sorted(region_groups[region], key=lambda x: x[2])
         for idx, (ip, code, _) in enumerate(sorted_ips, 1):
-            result.append(f"{ip}#{code} {region}节点|{idx:02d}")
+            result.append(f"{ip}#{code} {region}节点 | {idx:02d}")
     
     if result:
         with open('Senflare.txt', 'w', encoding='utf-8') as f:
