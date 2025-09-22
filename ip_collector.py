@@ -31,7 +31,7 @@ CONFIG = {
          # 'https://cf.090227.xyz',
         'https://raw.githubusercontent.com/ymyuuu/IPDB/main/BestCF/bestcfv4.txt'
         'https://api.uouin.com/cloudflare.html',
-        'https://ipdb.api.030101.xyz/?type=bestproxy&country=true',
+         # 'https://ipdb.api.030101.xyz/?type=bestproxy&country=true', # IP太多会导致无法处理
         'https://ipdb.api.030101.xyz/?type=bestcf&country=true',
         'https://addressesapi.090227.xyz/CloudFlareYes',
          # 'https://stock.hostmonit.com/CloudFlareYes',
