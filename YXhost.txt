@@ -27,8 +27,8 @@ mfa.gov.ua#Mfa | 三网专线
 nrt.xxxxxxxx.nyc.mn#Nrt | 三网专线
 cloudflare-dl.cnae.top#fishcpy | 三网专线 | 01
 cloudflare-dl.byoip.top#fishcpy | 三网专线 | 02
-openai.com#OpenAI | 三网专线
+www.openai.com#OpenAI | 三网专线
 www.shopify.com#Shopify | 三网专线
 mfa.gov.ua#乌克兰 | 三网专线
 store.ubi.com#Ubisoft | 三网专线
-staticdelivery.nexusmods.com#NexusMods | 三网专线
+www.nexusmods.com#NexusMods | 三网专线
