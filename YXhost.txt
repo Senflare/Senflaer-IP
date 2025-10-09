@@ -1,24 +1,36 @@
-ali.nonull.pp.ua:443#简睿 | 三网专线 | 01
+orange.seeck.cn:443#简睿 | 三网专线 | 01
 fn.130519.xyz:443#简睿 | 三网专线 | 02
 cf.900501.xyz:443#简睿 | 三网专线 | 03
 nrtcfdns.zone.id:443#简睿 | 三网专线 | 04
 freeyx.cloudflare88.eu.org:443#简睿 | 三网专线 | 05
 777.ai7777777.xyz:443#简睿 | 三网专线 | 06
 bestcf.030101.xyz:443#简睿 | 三网专线 | 07
-cf.tencentapp.cn:443#简睿 | 三网专线 | 08
+cfsaas.080112.xyz:443#简睿 | 三网专线 | 08
+ali.nonull.pp.ua:443#简睿 | 三网专线 | 09
+cdn.204910.best:443#简睿 | 三网专线 | 10
+
 cf.877774.xyz:443#秋名山 | 三网专线
 ct.877774.xyz:443#秋名山 | 电信专线
+saas.sin.fan:443#MIYU | 三网专线
+cf.tencentapp.cn:443#ktff | 三网专线
 cloudflare-ip.mofashi.ltd:443#魔法师 | 三网专线
+b3.cfyx.20237737.xyz:443#七十二时 | 三网专线
 cf.zhetengsha.eu.org:443#小一 | 三网专线
 one.cf.cdn.hyli.xyz:443#行雺 | 三网专线
 bestcf.top:443#BestCF | 三网专线
-cf.090227.xyz:443#CMLiussss | 三网专线
+cf.090227.xyz:443#CMLiussss | 三网专线 | 01
+youxuan.cf.090227.xyz:443#CMLiussss | 三网专线 | 02
 ct.090227.xyz:443#CMLiussss | 电信专线
 node.hubp.de:443#Ymyuuu | 三网专线
 sub.danfeng.eu.org:443#Dance | 三网专线
 cdns.doon.eu.org:443#Doon | 三网专线
 mfa.gov.ua:443#Mfa | 三网专线
 nrt.xxxxxxxx.nyc.mn:443#Nrt | 三网专线
+cloudflare-dl.cnae.top:443#fishcpy | 三网专线 | 01
+cloudflare-dl.byoip.top:443#fishcpy | 三网专线 | 02
+
 openai.com:443#OpenAI | 三网专线
-saas.sin.fan:443#SAAS | 三网专线
 www.shopify.com:443#Shopify | 三网专线
+mfa.gov.ua:443#乌克兰 | 三网专线
+store.ubi.com:443#Ubisoft | 三网专线
+staticdelivery.nexusmods.com:443#NexusMods | 三网专线
