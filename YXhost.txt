@@ -1,5 +1,5 @@
 orange.seeck.cn#简睿 | 三网专线 | 01
-fn.130519.xyz#简睿 | 三网专线 | 02
+cloudflare.seeck.cn#简睿 | 三网专线 | 02
 cf.900501.xyz#简睿 | 三网专线 | 03
 nrtcfdns.zone.id#简睿 | 三网专线 | 04
 freeyx.cloudflare88.eu.org#简睿 | 三网专线 | 05
@@ -21,9 +21,9 @@ cf.090227.xyz#CMLiussss | 三网专线 | 01
 youxuan.cf.090227.xyz#CMLiussss | 三网专线 | 02
 ct.090227.xyz#CMLiussss | 电信专线
 node.hubp.de#Ymyuuu | 三网专线
+fn.130519.xyz#fn | 三网专线
 sub.danfeng.eu.org#Dance | 三网专线
 cdns.doon.eu.org#Doon | 三网专线
-mfa.gov.ua#Mfa | 三网专线
 nrt.xxxxxxxx.nyc.mn#Nrt | 三网专线
 cloudflare-dl.cnae.top#fishcpy | 三网专线 | 01
 cloudflare-dl.byoip.top#fishcpy | 三网专线 | 02
