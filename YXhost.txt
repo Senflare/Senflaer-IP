@@ -1,6 +1,6 @@
 orange.seeck.cn#简睿 | 三网专线 | 01
 cloudflare.seeck.cn#简睿 | 三网专线 | 02
-cf.900501.xyz#简睿 | 三网专线 | 03
+elink.seeck.cn#简睿 | 三网专线 | 03
 nrtcfdns.zone.id#简睿 | 三网专线 | 04
 freeyx.cloudflare88.eu.org#简睿 | 三网专线 | 05
 777.ai7777777.xyz#简睿 | 三网专线 | 06
